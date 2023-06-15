@@ -3,6 +3,7 @@ package agrski.musiclib.services;
 import agrski.musiclib.dtos.NewSong;
 import agrski.musiclib.dtos.NewSongAlbum;
 import agrski.musiclib.dtos.NewSongArtist;
+import agrski.musiclib.dtos.UpdatedSong;
 import agrski.musiclib.entities.Album;
 import agrski.musiclib.entities.Artist;
 import agrski.musiclib.entities.Song;
@@ -39,15 +40,27 @@ public class SongService {
         Set<NewSongArtist> newSongArtists = newSong.getArtists();
         NewSongAlbum newSongAlbum = newSong.getAlbum();
 
-        Album album;
-        if (newSongAlbum.getId() == null) {
-            album = albumRepository.save(new Album(null, newSongAlbum.getName(),
-                    newSongAlbum.getReleaseYear(), new HashSet<>()));
-        } else {
-            album = albumRepository.findById(newSongAlbum.getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Album not found"));
-        }
+        Album album = extractAlbum(newSongAlbum);
+        Set<Artist> artists = extractArtists(newSongArtists);
 
+        return songRepository.save(new Song(null, newSong.getName(), artists, album));
+    }
+
+    public Song update(UpdatedSong updatedSong) {
+        Set<NewSongArtist> updatedSongArtists = updatedSong.getArtists();
+        NewSongAlbum updatedSongAlbum = updatedSong.getAlbum();
+
+        Album album = extractAlbum(updatedSongAlbum);
+        Set<Artist> artists = extractArtists(updatedSongArtists);
+
+        return songRepository.save(new Song(updatedSong.getId(), updatedSong.getName(), artists, album));
+    }
+
+    public void delete(Long id) {
+        songRepository.deleteById(id);
+    }
+
+    private Set<Artist> extractArtists(Set<NewSongArtist> newSongArtists) {
         Set<Artist> artists = new HashSet<>();
         for (NewSongArtist artist : newSongArtists) {
             if (artist.getId() == null) {
@@ -59,7 +72,18 @@ public class SongService {
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Artist not found")));
             }
         }
+        return artists;
+    }
 
-        return songRepository.save(new Song(null, newSong.getName(), artists, album));
+    private Album extractAlbum(NewSongAlbum newSongAlbum) {
+        Album album;
+        if (newSongAlbum.getId() == null) {
+            album = albumRepository.save(new Album(null, newSongAlbum.getName(),
+                    newSongAlbum.getReleaseYear(), new HashSet<>()));
+        } else {
+            album = albumRepository.findById(newSongAlbum.getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Album not found"));
+        }
+        return album;
     }
 }

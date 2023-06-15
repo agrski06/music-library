@@ -1,9 +1,11 @@
 package agrski.musiclib.controllers;
 
 import agrski.musiclib.dtos.NewSong;
+import agrski.musiclib.dtos.UpdatedSong;
 import agrski.musiclib.entities.Song;
 import agrski.musiclib.services.SongService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +31,17 @@ public class SongController {
     @PostMapping("")
     public ResponseEntity<Song> saveSong(@RequestBody NewSong song) {
         return ResponseEntity.ok(songService.addNewSong(song));
+    }
+
+    @PutMapping("")
+    public ResponseEntity<Song> updateSong(@RequestBody UpdatedSong song) {
+        return ResponseEntity.ok(songService.update(song));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteSong(@PathVariable Long id) {
+        songService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
 }
