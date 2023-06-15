@@ -1,13 +1,11 @@
 package agrski.musiclib.controllers;
 
+import agrski.musiclib.dtos.NewSong;
 import agrski.musiclib.entities.Song;
 import agrski.musiclib.services.SongService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,6 +24,11 @@ public class SongController {
     @GetMapping("/{id}")
     public ResponseEntity<Song> getSongById(@PathVariable Long id) {
         return ResponseEntity.ok(songService.getById(id));
+    }
+
+    @PostMapping("")
+    public ResponseEntity<Song> saveSong(@RequestBody NewSong song) {
+        return ResponseEntity.ok(songService.addNewSong(song));
     }
 
 }

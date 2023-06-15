@@ -1,19 +1,30 @@
 package agrski.musiclib.services;
 
+import agrski.musiclib.dtos.NewSong;
+import agrski.musiclib.dtos.NewSongAlbum;
+import agrski.musiclib.dtos.NewSongArtist;
+import agrski.musiclib.entities.Album;
+import agrski.musiclib.entities.Artist;
 import agrski.musiclib.entities.Song;
+import agrski.musiclib.repositories.AlbumRepository;
+import agrski.musiclib.repositories.ArtistRepository;
 import agrski.musiclib.repositories.SongRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class SongService {
 
     private final SongRepository songRepository;
+    private final AlbumRepository albumRepository;
+    private final ArtistRepository artistRepository;
 
     public List<Song> getAll() {
         return songRepository.findAll();
@@ -22,5 +33,33 @@ public class SongService {
     public Song getById(Long id) {
         return songRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found"));
+    }
+
+    public Song addNewSong(NewSong newSong) {
+        Set<NewSongArtist> newSongArtists = newSong.getArtists();
+        NewSongAlbum newSongAlbum = newSong.getAlbum();
+
+        Album album;
+        if (newSongAlbum.getId() == null) {
+            album = albumRepository.save(new Album(null, newSongAlbum.getName(),
+                    newSongAlbum.getReleaseYear(), new HashSet<>()));
+        } else {
+            album = albumRepository.findById(newSongAlbum.getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Album not found"));
+        }
+
+        Set<Artist> artists = new HashSet<>();
+        for (NewSongArtist artist : newSongArtists) {
+            if (artist.getId() == null) {
+                artists.add(
+                        artistRepository.save(new Artist(null, artist.getName()))
+                );
+            } else {
+                artists.add(artistRepository.findById(artist.getId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Artist not found")));
+            }
+        }
+
+        return songRepository.save(new Song(null, newSong.getName(), artists, album));
     }
 }
