@@ -5,6 +5,7 @@ import agrski.musiclib.services.SongService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +21,11 @@ public class SongController {
     @GetMapping("")
     public ResponseEntity<List<Song>> getAll() {
         return ResponseEntity.ok(songService.getAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Song> getSongById(@PathVariable Long id) {
+        return ResponseEntity.ok(songService.getById(id));
     }
 
 }
