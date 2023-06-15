@@ -1,10 +1,13 @@
 package agrski.musiclib.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Set;
 
 @Entity
+@Data
 public class Song {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,9 +15,10 @@ public class Song {
 
     private String name;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Artist> artists;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnoreProperties(value = {"songs"})
     private Album album;
 }
