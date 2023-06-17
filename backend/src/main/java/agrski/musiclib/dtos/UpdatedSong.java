@@ -12,6 +12,7 @@ import java.util.Set;
 public class UpdatedSong {
     private Long id;
     private String name;
+    private String duration;
     private Set<NewSongArtist> artists;
     private NewSongAlbum album;
 }

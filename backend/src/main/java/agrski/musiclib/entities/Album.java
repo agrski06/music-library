@@ -20,6 +20,6 @@ public class Album {
 
     private Integer releaseYear;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "album")
     private Set<Song> songs;
 }

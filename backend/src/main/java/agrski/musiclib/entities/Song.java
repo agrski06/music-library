@@ -19,6 +19,8 @@ public class Song {
 
     private String name;
 
+    private String duration;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Artist> artists;
 

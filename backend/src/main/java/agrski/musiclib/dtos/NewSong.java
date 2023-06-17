@@ -11,6 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class NewSong {
     private String name;
+    private String duration;
     private Set<NewSongArtist> artists;
     private NewSongAlbum album;
 }

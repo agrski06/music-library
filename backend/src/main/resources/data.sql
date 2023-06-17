@@ -17,10 +17,10 @@ INSERT INTO album (release_year, name) VALUES ( 2000, 'Hybrid Theory' );
 --     album_id   INTEGER not null
 -- );
 
-INSERT INTO song (name, album_id) VALUES ( 'Papercut', 1 );
-INSERT INTO song (name, album_id) VALUES ( 'One Step Closer', 1 );
-INSERT INTO song (name, album_id) VALUES ( 'With You', 1 );
-INSERT INTO song (name, album_id) VALUES ( 'Points of Authority', 1 );
+INSERT INTO song (name, duration, album_id) VALUES ( 'Papercut', '3:04', 1 );
+INSERT INTO song (name, duration, album_id) VALUES ( 'One Step Closer', '2:37', 1 );
+INSERT INTO song (name, duration, album_id) VALUES ( 'With You', '3:23', 1 );
+INSERT INTO song (name, duration, album_id) VALUES ( 'Points of Authority', '3:20', 1 );
 
 -- create table if not exists artist
 -- (
@@ -30,10 +30,10 @@ INSERT INTO song (name, album_id) VALUES ( 'Points of Authority', 1 );
 
 INSERT INTO artist (name) VALUES ( 'Linkin Park' );
 
-INSERT INTO album_songs (album_id, songs_id) VALUES ( 1, 1 );
-INSERT INTO album_songs (album_id, songs_id) VALUES ( 1, 2 );
-INSERT INTO album_songs (album_id, songs_id) VALUES ( 1, 3 );
-INSERT INTO album_songs (album_id, songs_id) VALUES ( 1, 4 );
+-- INSERT INTO album_songs (album_id, songs_id) VALUES ( 1, 1 );
+-- INSERT INTO album_songs (album_id, songs_id) VALUES ( 1, 2 );
+-- INSERT INTO album_songs (album_id, songs_id) VALUES ( 1, 3 );
+-- INSERT INTO album_songs (album_id, songs_id) VALUES ( 1, 4 );
 
 INSERT INTO song_artists (artists_id, song_id) VALUES ( 1, 1 );
 INSERT INTO song_artists (artists_id, song_id) VALUES ( 1, 2 );

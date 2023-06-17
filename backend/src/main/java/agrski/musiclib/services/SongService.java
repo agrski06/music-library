@@ -43,7 +43,7 @@ public class SongService {
         Album album = extractAlbum(newSongAlbum);
         Set<Artist> artists = extractArtists(newSongArtists);
 
-        return songRepository.save(new Song(null, newSong.getName(), artists, album));
+        return songRepository.save(new Song(null, newSong.getName(), newSong.getDuration(), artists, album));
     }
 
     public Song update(UpdatedSong updatedSong) {
@@ -53,7 +53,7 @@ public class SongService {
         Album album = extractAlbum(updatedSongAlbum);
         Set<Artist> artists = extractArtists(updatedSongArtists);
 
-        return songRepository.save(new Song(updatedSong.getId(), updatedSong.getName(), artists, album));
+        return songRepository.save(new Song(updatedSong.getId(), updatedSong.getName(), updatedSong.getDuration(), artists, album));
     }
 
     public void delete(Long id) {
