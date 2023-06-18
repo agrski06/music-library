@@ -55,7 +55,13 @@ public class SongService {
         Set<Artist> artists = extractArtists(updatedSongArtists);
 
         if (artists.isEmpty()) {
-            throw new InvalidUpdateRequestException("Specify at least 1 artist");
+            throw new InvalidUpdateRequestException("Specify at least 1 artist!");
+        }
+        if (updatedSong.getName().isBlank()) {
+            throw new InvalidUpdateRequestException("Name can't be empty!");
+        }
+        if (updatedSong.getDuration().isBlank()) {
+            throw new InvalidUpdateRequestException("Duration can't be empty!");
         }
 
         return songRepository.save(new Song(updatedSong.getId(), updatedSong.getName(), updatedSong.getDuration(), artists, album));

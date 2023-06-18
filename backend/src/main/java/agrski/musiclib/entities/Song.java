@@ -25,6 +25,7 @@ public class Song {
     private Set<Artist> artists;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "album_id")
     @JsonIgnoreProperties(value = {"songs"})
     private Album album;
 }

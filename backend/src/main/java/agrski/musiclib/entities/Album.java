@@ -1,5 +1,6 @@
 package agrski.musiclib.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class Album {
 
     private Integer releaseYear;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "album")
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties(value = "album")
     private Set<Song> songs;
 }
