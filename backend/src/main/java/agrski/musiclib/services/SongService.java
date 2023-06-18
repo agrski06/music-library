@@ -7,6 +7,7 @@ import agrski.musiclib.dtos.UpdatedSong;
 import agrski.musiclib.entities.Album;
 import agrski.musiclib.entities.Artist;
 import agrski.musiclib.entities.Song;
+import agrski.musiclib.exceptions.InvalidUpdateRequestException;
 import agrski.musiclib.repositories.AlbumRepository;
 import agrski.musiclib.repositories.ArtistRepository;
 import agrski.musiclib.repositories.SongRepository;
@@ -52,6 +53,10 @@ public class SongService {
 
         Album album = extractAlbum(updatedSongAlbum);
         Set<Artist> artists = extractArtists(updatedSongArtists);
+
+        if (artists.isEmpty()) {
+            throw new InvalidUpdateRequestException("Specify at least 1 artist");
+        }
 
         return songRepository.save(new Song(updatedSong.getId(), updatedSong.getName(), updatedSong.getDuration(), artists, album));
     }
