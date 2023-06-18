@@ -46,7 +46,7 @@ public class SongServiceTest {
     @BeforeEach
     public void setup() {
         artist = new Artist(1L, "Test Artist");
-        song = new Song(1L, "Test", Set.of(artist), null);
+        song = new Song(1L, "Test", "1:00", Set.of(artist), null);
         album = new Album(1L, "Test album", 2000, Set.of(song));
         song.setAlbum(album);
     }
@@ -56,7 +56,7 @@ public class SongServiceTest {
     public void givenSongWithExistingAlbumAndArtist_whenAddNewSong_thenReturnSong() {
         NewSongArtist newSongArtist = new NewSongArtist(1L, null);
         NewSongAlbum newSongAlbum = new NewSongAlbum(1L, null, null);
-        NewSong newSong = new NewSong(this.song.getName(), Set.of(newSongArtist), newSongAlbum);
+        NewSong newSong = new NewSong(this.song.getName(), this.song.getDuration(), Set.of(newSongArtist), newSongAlbum);
 
         when(artistRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(this.artist));
         when(albumRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(this.album));
@@ -77,7 +77,7 @@ public class SongServiceTest {
     public void givenSongWithNewAlbumAndArtist_whenAddNewSong_thenReturnSong() {
         NewSongArtist newSongArtist = new NewSongArtist(null, this.artist.getName());
         NewSongAlbum newSongAlbum = new NewSongAlbum(null, this.album.getName(), this.album.getReleaseYear());
-        NewSong newSong = new NewSong(this.song.getName(), Set.of(newSongArtist), newSongAlbum);
+        NewSong newSong = new NewSong(this.song.getName(), this.song.getDuration(), Set.of(newSongArtist), newSongAlbum);
 
         when(artistRepository.save(any())).thenReturn(this.artist);
         when(albumRepository.save(any())).thenReturn(this.album);
