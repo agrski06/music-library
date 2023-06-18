@@ -1,11 +1,8 @@
 package agrski.musiclib.controllers;
 
 import agrski.musiclib.dtos.NewAlbum;
-import agrski.musiclib.dtos.NewArtist;
 import agrski.musiclib.dtos.UpdatedAlbum;
-import agrski.musiclib.dtos.UpdatedArtist;
 import agrski.musiclib.entities.Album;
-import agrski.musiclib.entities.Artist;
 import agrski.musiclib.services.AlbumService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
