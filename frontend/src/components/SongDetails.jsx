@@ -72,7 +72,7 @@ export const SongDetails = () => {
           />
         </div>
 
-        <button className="btn btn-primary" onClick={handleSubmit}>Edytuj</button>
+        <button className="btn btn-primary" onClick={handleSubmit}>Edit</button>
       </div>
     </div>
   );

@@ -26,7 +26,6 @@ function SongList() {
         const response = await axios.get('http://localhost:8080/api/songs');
         setSongs(response.data);
         setIsLoading(false);
-        console.log(songs)
       } catch (error) {
         console.log(error);
       }
@@ -41,6 +40,7 @@ function SongList() {
         return <SongListItem id={song.id} 
         name={song.name} 
         artists={song.artists}
+        duration={song.duration}
         album={song.album} 
         key={song.id}/>
       })}
