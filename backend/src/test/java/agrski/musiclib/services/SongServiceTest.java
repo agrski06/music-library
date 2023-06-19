@@ -57,14 +57,15 @@ public class SongServiceTest {
 
     @DisplayName("Update song")
     @Test
-    public void givenSongWithExistingAlbumAndArtist_whenAddNewSong_thenReturnSong() {
+    public void givenUpdatedSong_whenUpdateSong_thenReturnSong() {
+        String updatedName = "new name";
         NewSongArtist newSongArtist = new NewSongArtist(1L, null);
         NewSongAlbum newSongAlbum = new NewSongAlbum(1L, null, null);
-        UpdatedSong updatedSong = new UpdatedSong(song.getId(), this.song.getName(), this.song.getDuration(), Set.of(newSongArtist), newSongAlbum);
+        UpdatedSong updatedSong = new UpdatedSong(song.getId(), updatedName, this.song.getDuration(), Set.of(newSongArtist), newSongAlbum);
 
         when(artistRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(this.artist));
         when(albumRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(this.album));
-        when(songRepository.save(any())).thenReturn(this.song);
+        when(songRepository.save(any())).thenReturn(new Song(song.getId(), updatedName, song.getDuration(), Set.of(artist), album));
 
         Song result = songService.update(updatedSong);
 
@@ -78,19 +79,19 @@ public class SongServiceTest {
 
     @DisplayName("Add song")
     @Test
-    public void givenSongWithNewAlbumAndArtist_whenAddNewSong_thenReturnSong() {
-        NewSongArtist newSongArtist = new NewSongArtist(null, this.artist.getName());
-        NewSongAlbum newSongAlbum = new NewSongAlbum(null, this.album.getName(), this.album.getReleaseYear());
+    public void givenNewSongWith_whenAddNewSong_thenReturnSong() {
+        NewSongArtist newSongArtist = new NewSongArtist(1L, null);
+        NewSongAlbum newSongAlbum = new NewSongAlbum(1L, null, null);
         NewSong newSong = new NewSong(this.song.getName(), this.song.getDuration(), Set.of(newSongArtist), newSongAlbum);
 
-        when(artistRepository.save(any())).thenReturn(this.artist);
-        when(albumRepository.save(any())).thenReturn(this.album);
         when(songRepository.save(any())).thenReturn(this.song);
+        when(albumRepository.findById(any())).thenReturn(Optional.ofNullable(this.album));
+        when(artistRepository.findById(any())).thenReturn(Optional.ofNullable(this.artist));
 
         Song result = songService.addNewSong(newSong);
 
-        verify(artistRepository, times(1)).save(any());
-        verify(albumRepository, times(1)).save(any());
+        verify(artistRepository, times(1)).findById(any());
+        verify(albumRepository, times(1)).findById(any());
         verify(songRepository, times(1)).save(any());
 
         assertEquals(result.getName(), newSong.getName());
@@ -100,13 +101,23 @@ public class SongServiceTest {
     @DisplayName("Add song - empty name")
     @Test
     public void givenNewSongWithBlankName_whenAddNewSong_thenThrow() {
-        NewSongArtist newSongArtist = new NewSongArtist(null, this.artist.getName());
-        NewSongAlbum newSongAlbum = new NewSongAlbum(null, this.album.getName(), this.album.getReleaseYear());
+        NewSongArtist newSongArtist = new NewSongArtist(1L, null);
+        NewSongAlbum newSongAlbum = new NewSongAlbum(1L, null, null);
         NewSong newSong = new NewSong(null, this.song.getDuration(), Set.of(newSongArtist), newSongAlbum);
 
         assertThrows(InvalidSaveRequestException.class, () -> songService.addNewSong(newSong));
 
         newSong.setName("");
+
+        assertThrows(InvalidSaveRequestException.class, () -> songService.addNewSong(newSong));
+    }
+
+    @DisplayName("Add song - non existing album id")
+    @Test
+    public void givenNewSongWithNonExistingAlbumId_whenAddNewSong_thenThrow() {
+        NewSongArtist newSongArtist = new NewSongArtist(null, this.artist.getName());
+        NewSongAlbum newSongAlbum = new NewSongAlbum(100L, this.album.getName(), this.album.getReleaseYear());
+        NewSong newSong = new NewSong(null, this.song.getDuration(), Set.of(newSongArtist), newSongAlbum);
 
         assertThrows(InvalidSaveRequestException.class, () -> songService.addNewSong(newSong));
     }

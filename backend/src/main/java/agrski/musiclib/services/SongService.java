@@ -64,12 +64,16 @@ public class SongService {
         Set<NewSongArtist> newSongArtists = newSong.getArtists();
         NewSongAlbum newSongAlbum = newSong.getAlbum();
 
+        if (newSongArtists == null || newSongArtists.isEmpty()) {
+            throw new InvalidSaveRequestException("Specify at least 1 artist!");
+        }
+        if (newSongAlbum.getId() == null) {
+            throw new InvalidSaveRequestException("Specify album!");
+        }
+
         Album album = extractAlbum(newSongAlbum);
         Set<Artist> artists = extractArtists(newSongArtists);
 
-        if (artists.isEmpty()) {
-            throw new InvalidSaveRequestException("Specify at least 1 artist!");
-        }
         if (newSong.getName() == null || newSong.getName().isBlank()) {
             throw new InvalidSaveRequestException("Name can't be empty or null!");
         }
@@ -113,7 +117,8 @@ public class SongService {
                 );
             } else {
                 artists.add(artistRepository.findById(artist.getId())
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Artist not found")));
+                        .orElseThrow(() -> new InvalidSaveRequestException(
+                                "Artist with id=" + artist.getId() + " doesn't exist")));
             }
         }
         return artists;
@@ -126,7 +131,8 @@ public class SongService {
                     newSongAlbum.getReleaseYear(), new HashSet<>()));
         } else {
             album = albumRepository.findById(newSongAlbum.getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Album not found"));
+                    .orElseThrow(() -> new InvalidSaveRequestException(
+                            "Album with id=" + newSongAlbum.getId() + " doesn't exist"));
         }
         return album;
     }
