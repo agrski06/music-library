@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 export const SongDetails = () => {
   const routeParams = useParams();
   const [artists, setArtists] = useState([]);
+  const [albums, setAlbums] = useState([]);
   const [songs, setSongs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
@@ -27,6 +28,9 @@ export const SongDetails = () => {
 
         response = await axios.get("http://localhost:8080/api/artists");
         setArtists(response.data);
+
+        response = await axios.get("http://localhost:8080/api/albums");
+        setAlbums(response.data);
 
         setIsLoading(false);
       } catch (error) {
@@ -74,6 +78,14 @@ export const SongDetails = () => {
       ],
     }));
   };
+
+  const handleAlbumChange = (e) => {
+    const temp = albums.find((a) => a.id === +e.target.value);
+    setUpdatedSong((prevState) => ({
+      ...prevState,
+      album: temp
+    }));
+  }
 
   const handleDeleteArtist = (e) => {
     const objWithIdIndex = updatedSong.artists.findIndex(
@@ -155,6 +167,24 @@ export const SongDetails = () => {
             );
           })}
         </div>
+
+        <select
+          className="select border-accent w-full max-w-xs mt-4"
+          defaultValue={"s"}
+          onChange={handleAlbumChange}
+        >
+          <option disabled selected>
+            Choose album
+          </option>
+          {albums.map((album) => {
+            return (
+              <option value={album.id} key={album.id}>
+                {album.name}
+              </option>
+            );
+          })}
+        </select>
+        <div>Current album: {isLoading ? "" : songs.album.name}</div>
 
         <button className="btn btn-primary" onClick={handleSubmit}>
           Edit

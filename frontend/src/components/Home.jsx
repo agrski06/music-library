@@ -8,11 +8,12 @@ function Home() {
   const [songs, setSongs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchPhrase, setSearchPhrase] = useState("");
+  const [params, setParams] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/songs");
+        const response = await axios.get("http://localhost:8080/api/songs", { params: params });
         setSongs(response.data);
         setIsLoading(false);
       } catch (error) {
@@ -21,18 +22,21 @@ function Home() {
     };
 
     fetchData();
-  }, []);
+  }, [params]);
 
   const handleSearch = async () => {
     try {
       if (searchPhrase) {
-        const response = await axios.get(
-          `http://localhost:8080/api/songs?name=${searchPhrase}`
-        );
-        setSongs(response.data);
+        setParams((prev) => ({
+          ...prev,
+          name: searchPhrase,
+        }));
       } else {
-        const response = await axios.get("http://localhost:8080/api/songs");
-        setSongs(response.data);
+        // remove name from params
+        let state = { ...params };
+        delete state.name;
+        setParams(state);
+
       }
     } catch (error) {
       console.log(error);
@@ -40,20 +44,34 @@ function Home() {
   };
 
   const handleEnter = (event) => {
-    if (event.key === 'Enter') {
-      handleSearch()
+    if (event.key === "Enter") {
+      handleSearch();
     }
-  }
+  };
 
   const handleSearchPhrase = (e) => {
     setSearchPhrase(e.target.value);
+  };
+
+  const handleSortChange = async (e) => {
+    if (e.target.value === "album") {
+      setParams((prev) => ({
+        ...prev,
+        sort: "ALBUM",
+      }));
+    } else if (e.target.value === "song") {
+      setParams((prev) => ({
+        ...prev,
+        sort: "SONG",
+      }));
+    }
   };
 
   return (
     <div className="h-screen w-full bg-base-100">
       <Navbar />
       <div className="flex flex-row items-center justify-between p-10 -mb-10">
-        <div className="flex gap-2">
+        <div className="flex justify-center items-center gap-2">
           <input
             type="text"
             placeholder="Search song"
@@ -64,7 +82,19 @@ function Home() {
           <button className="btn btn-primary" onClick={handleSearch}>
             Search
           </button>
+
+          <select
+            className="select border-primary w-full max-w-xs"
+            onChange={handleSortChange}
+          >
+            <option disabled selected>
+              Sort by
+            </option>
+            <option value="album">Album name</option>
+            <option value="song">Song name</option>
+          </select>
         </div>
+
         <h1 className="text-3xl">All songs: </h1>
         <div className="flex flex-row gap-4 justify-end">
           <NavLink to={"/song/new"}>
