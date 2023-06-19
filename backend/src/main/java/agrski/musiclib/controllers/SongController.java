@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/songs")
@@ -18,7 +19,17 @@ public class SongController {
     private final SongService songService;
 
     @GetMapping("")
-    public ResponseEntity<List<Song>> getAll() {
+    public ResponseEntity<List<Song>> getAll(@RequestParam Optional<String> name,
+                                             @RequestParam Optional<SortType> sort) {
+        if (sort.isPresent() && name.isPresent()) {
+            return ResponseEntity.ok(songService.getAllByNameAndSorted(name.get(), sort.get()));
+        }
+        if (name.isPresent()) {
+            return ResponseEntity.ok(songService.getAllByName(name.get()));
+        }
+        if (sort.isPresent()) {
+            return ResponseEntity.ok(songService.getAllSorted(sort.get()));
+        }
         return ResponseEntity.ok(songService.getAll());
     }
 
