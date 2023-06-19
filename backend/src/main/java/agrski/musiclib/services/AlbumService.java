@@ -4,6 +4,8 @@ import agrski.musiclib.dtos.NewAlbum;
 import agrski.musiclib.dtos.UpdatedAlbum;
 import agrski.musiclib.entities.Album;
 import agrski.musiclib.entities.Song;
+import agrski.musiclib.exceptions.InvalidSaveRequestException;
+import agrski.musiclib.exceptions.InvalidUpdateRequestException;
 import agrski.musiclib.repositories.AlbumRepository;
 import agrski.musiclib.repositories.SongRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,10 +39,19 @@ public class AlbumService {
     }
 
     public Album addNewAlbum(NewAlbum album) {
+        if (album.getName() == null || album.getName().isBlank()) {
+            throw new InvalidSaveRequestException("Album name can't be null!");
+        }
+        if (album.getReleaseYear() == null) {
+            throw new InvalidSaveRequestException("Release year can't be null!");
+        }
         return albumRepository.save(new Album(null, album.getName(), album.getReleaseYear(), new HashSet<>()));
     }
 
     public Album update(UpdatedAlbum album) {
+        if (album.getId() == null) {
+            throw new InvalidUpdateRequestException("Id can't be null during update!");
+        }
         Album albumToUpdate = albumRepository.findById(album.getId()).orElseThrow();
         albumToUpdate.setName(album.getName());
         albumToUpdate.setReleaseYear(album.getReleaseYear());

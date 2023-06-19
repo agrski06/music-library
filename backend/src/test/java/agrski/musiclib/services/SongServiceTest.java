@@ -55,28 +55,28 @@ public class SongServiceTest {
         song.setAlbum(album);
     }
 
-    @DisplayName("Add song - existing album and artist")
+    @DisplayName("Update song")
     @Test
     public void givenSongWithExistingAlbumAndArtist_whenAddNewSong_thenReturnSong() {
         NewSongArtist newSongArtist = new NewSongArtist(1L, null);
         NewSongAlbum newSongAlbum = new NewSongAlbum(1L, null, null);
-        NewSong newSong = new NewSong(this.song.getName(), this.song.getDuration(), Set.of(newSongArtist), newSongAlbum);
+        UpdatedSong updatedSong = new UpdatedSong(song.getId(), this.song.getName(), this.song.getDuration(), Set.of(newSongArtist), newSongAlbum);
 
         when(artistRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(this.artist));
         when(albumRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(this.album));
         when(songRepository.save(any())).thenReturn(this.song);
 
-        Song result = songService.addNewSong(newSong);
+        Song result = songService.update(updatedSong);
 
         verify(artistRepository, times(1)).findById(any());
         verify(albumRepository, times(1)).findById(any());
         verify(songRepository, times(1)).save(any());
 
-        assertEquals(result.getName(), newSong.getName());
-        assertEquals(result.getArtists().size(), newSong.getArtists().size());
+        assertEquals(result.getName(), updatedSong.getName());
+        assertEquals(result.getArtists().size(), updatedSong.getArtists().size());
     }
 
-    @DisplayName("Add song - new album and artist")
+    @DisplayName("Add song")
     @Test
     public void givenSongWithNewAlbumAndArtist_whenAddNewSong_thenReturnSong() {
         NewSongArtist newSongArtist = new NewSongArtist(null, this.artist.getName());

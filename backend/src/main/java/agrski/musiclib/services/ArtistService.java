@@ -3,6 +3,8 @@ package agrski.musiclib.services;
 import agrski.musiclib.dtos.NewArtist;
 import agrski.musiclib.dtos.UpdatedArtist;
 import agrski.musiclib.entities.Artist;
+import agrski.musiclib.exceptions.InvalidSaveRequestException;
+import agrski.musiclib.exceptions.InvalidUpdateRequestException;
 import agrski.musiclib.repositories.ArtistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,10 +29,16 @@ public class ArtistService {
     }
 
     public Artist addNewArtist(NewArtist artist) {
+        if (artist.getName() == null || artist.getName().isBlank()) {
+            throw new InvalidSaveRequestException("Artist name can't be empty!");
+        }
         return artistRepository.save(new Artist(null, artist.getName()));
     }
 
     public Artist update(UpdatedArtist artist) {
+        if (artist.getId() == null) {
+            throw new InvalidUpdateRequestException("Id can't be null during update!");
+        }
         return artistRepository.save(new Artist(artist.getId(), artist.getName()));
     }
 
