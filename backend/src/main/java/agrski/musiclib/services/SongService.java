@@ -37,17 +37,17 @@ public class SongService {
 
     public List<Song> getAllSorted(SortType sortType) {
         List<Song> songs = songRepository.findAll();
-        if (sortType == SortType.SONG) {
-            songs.sort(Comparator.comparing(Song::getName, String.CASE_INSENSITIVE_ORDER));
-            return songs;
-        }
-        songs.sort(Comparator.comparing(o -> o.getAlbum().getName(), String.CASE_INSENSITIVE_ORDER));
-        return songs;
+        return getSortedSongList(sortType, songs);
     }
 
     public List<Song> getAllByNameAndSorted(String name, SortType sortType) {
-        List<Song> songs = songRepository.findAllByNameContainingIgnoreCaseOrderByName(name);
+        List<Song> songs = songRepository.findAllByNameContainingIgnoreCase(name);
+        return getSortedSongList(sortType, songs);
+    }
+
+    private static List<Song> getSortedSongList(SortType sortType, List<Song> songs) {
         if (sortType == SortType.SONG) {
+            songs.sort(Comparator.comparing(Song::getName, String.CASE_INSENSITIVE_ORDER));
             return songs;
         }
         songs.sort(Comparator.comparing(o -> o.getAlbum().getName(), String.CASE_INSENSITIVE_ORDER));
