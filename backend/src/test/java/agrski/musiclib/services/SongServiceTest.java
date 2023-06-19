@@ -3,9 +3,12 @@ package agrski.musiclib.services;
 import agrski.musiclib.dtos.NewSong;
 import agrski.musiclib.dtos.NewSongAlbum;
 import agrski.musiclib.dtos.NewSongArtist;
+import agrski.musiclib.dtos.UpdatedSong;
 import agrski.musiclib.entities.Album;
 import agrski.musiclib.entities.Artist;
 import agrski.musiclib.entities.Song;
+import agrski.musiclib.exceptions.InvalidSaveRequestException;
+import agrski.musiclib.exceptions.InvalidUpdateRequestException;
 import agrski.musiclib.repositories.AlbumRepository;
 import agrski.musiclib.repositories.ArtistRepository;
 import agrski.musiclib.repositories.SongRepository;
@@ -21,6 +24,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -91,6 +95,34 @@ public class SongServiceTest {
 
         assertEquals(result.getName(), newSong.getName());
         assertEquals(result.getArtists().size(), newSong.getArtists().size());
+    }
+
+    @DisplayName("Add song - empty name")
+    @Test
+    public void givenNewSongWithBlankName_whenAddNewSong_thenThrow() {
+        NewSongArtist newSongArtist = new NewSongArtist(null, this.artist.getName());
+        NewSongAlbum newSongAlbum = new NewSongAlbum(null, this.album.getName(), this.album.getReleaseYear());
+        NewSong newSong = new NewSong(null, this.song.getDuration(), Set.of(newSongArtist), newSongAlbum);
+
+        assertThrows(InvalidSaveRequestException.class, () -> songService.addNewSong(newSong));
+
+        newSong.setName("");
+
+        assertThrows(InvalidSaveRequestException.class, () -> songService.addNewSong(newSong));
+    }
+
+    @DisplayName("Update song - empty name")
+    @Test
+    public void givenUpdatedSongWithBlankName_whenUpdateSong_thenThrow() {
+        NewSongArtist newSongArtist = new NewSongArtist(null, this.artist.getName());
+        NewSongAlbum newSongAlbum = new NewSongAlbum(null, this.album.getName(), this.album.getReleaseYear());
+        UpdatedSong updatedSong = new UpdatedSong(song.getId(), null, this.song.getDuration(), Set.of(newSongArtist), newSongAlbum);
+
+        assertThrows(InvalidUpdateRequestException.class, () -> songService.update(updatedSong));
+
+        updatedSong.setName("");
+
+        assertThrows(InvalidUpdateRequestException.class, () -> songService.update(updatedSong));
     }
 
 }

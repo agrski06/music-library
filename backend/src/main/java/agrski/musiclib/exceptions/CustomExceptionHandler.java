@@ -14,4 +14,9 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(new ExceptionResponse(exception.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(InvalidSaveRequestException.class)
+    public ResponseEntity<?> invalidSaveRequest(Exception exception, WebRequest request) {
+        return new ResponseEntity<>(new ExceptionResponse(exception.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
 }

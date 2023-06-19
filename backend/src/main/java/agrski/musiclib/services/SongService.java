@@ -8,6 +8,7 @@ import agrski.musiclib.dtos.UpdatedSong;
 import agrski.musiclib.entities.Album;
 import agrski.musiclib.entities.Artist;
 import agrski.musiclib.entities.Song;
+import agrski.musiclib.exceptions.InvalidSaveRequestException;
 import agrski.musiclib.exceptions.InvalidUpdateRequestException;
 import agrski.musiclib.repositories.AlbumRepository;
 import agrski.musiclib.repositories.ArtistRepository;
@@ -45,7 +46,7 @@ public class SongService {
         return getSortedSongList(sortType, songs);
     }
 
-    private static List<Song> getSortedSongList(SortType sortType, List<Song> songs) {
+    private List<Song> getSortedSongList(SortType sortType, List<Song> songs) {
         if (sortType == SortType.SONG) {
             songs.sort(Comparator.comparing(Song::getName, String.CASE_INSENSITIVE_ORDER));
             return songs;
@@ -66,6 +67,16 @@ public class SongService {
         Album album = extractAlbum(newSongAlbum);
         Set<Artist> artists = extractArtists(newSongArtists);
 
+        if (artists.isEmpty()) {
+            throw new InvalidSaveRequestException("Specify at least 1 artist!");
+        }
+        if (newSong.getName() == null || newSong.getName().isBlank()) {
+            throw new InvalidSaveRequestException("Name can't be empty or null!");
+        }
+        if (newSong.getName() == null || newSong.getDuration().isBlank()) {
+            throw new InvalidSaveRequestException("Duration can't be empty!");
+        }
+
         return songRepository.save(new Song(null, newSong.getName(), newSong.getDuration(), artists, album));
     }
 
@@ -79,10 +90,10 @@ public class SongService {
         if (artists.isEmpty()) {
             throw new InvalidUpdateRequestException("Specify at least 1 artist!");
         }
-        if (updatedSong.getName().isBlank()) {
+        if (updatedSong.getName() == null || updatedSong.getName().isBlank()) {
             throw new InvalidUpdateRequestException("Name can't be empty!");
         }
-        if (updatedSong.getDuration().isBlank()) {
+        if (updatedSong.getName() == null || updatedSong.getDuration().isBlank()) {
             throw new InvalidUpdateRequestException("Duration can't be empty!");
         }
 
