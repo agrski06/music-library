@@ -44,7 +44,7 @@ export const SongListItem = ({ id, name, duration, artists, album }) => {
       </Link>
 
       <button
-        className="btn outline-error bg-base-100 text-white btn-error"
+        className="btn outline-error h-20 bg-base-100 text-white btn-error"
         onClick={handleDelete}
       >
         Delete
