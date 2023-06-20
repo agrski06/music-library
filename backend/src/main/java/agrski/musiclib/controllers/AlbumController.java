@@ -6,6 +6,7 @@ import agrski.musiclib.entities.Album;
 import agrski.musiclib.services.AlbumService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
