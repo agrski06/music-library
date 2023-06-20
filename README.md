@@ -7,6 +7,10 @@ To start frontend, run the following commands in frontend directory: `npm instal
 
 Notes: make sure that port 8080 is not occupied.
 
+## API Docs
+
+http://localhost:8080/swagger-ui/index.html
+
 ## Home screen
 
 ![Home](/docs/home.png)
