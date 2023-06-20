@@ -4,9 +4,10 @@ import axios from "axios";
 
 export const AddAlbum = () => {
   const [newAlbum, setNewAlbum] = useState({ name: "", releaseYear: 0 });
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = ({ currentTarget: input }) => {
-    setNewAlbum({ ...newAlbum, [input.name]: input.value });
+    setNewAlbum({ ...newAlbum, [input.name]: (input.name === "releaseYear" ? +input.value : input.value) });
   };
 
   const handleSubmit = async () => {
@@ -15,9 +16,11 @@ export const AddAlbum = () => {
         "http://localhost:8080/api/albums",
         newAlbum
       );
+      console.log(response)
       window.location.href = "/";
     } catch (error) {
       console.log(error);
+      setErrorMessage(error.response.data.map(msg => <p>{msg}</p>));
     }
   };
 
@@ -47,12 +50,22 @@ export const AddAlbum = () => {
             className="input input-bordered input-accent w-full max-w-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             name="releaseYear"
             onChange={handleChange}
+            onKeyPress={(event) => {
+              if (!/[0-9]/.test(event.key)) {
+                event.preventDefault();
+              }
+            }}
           />
         </div>
 
         <button className="btn btn-primary" onClick={handleSubmit}>
           Save
         </button>
+
+        {<div className={errorMessage ? `visible` : `invisible`}>
+          {errorMessage}
+        </div>}
+
       </div>
     </div>
   );

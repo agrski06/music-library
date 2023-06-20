@@ -7,6 +7,7 @@ export const AddSong = () => {
   const [album, setAlbum] = useState({ id: 0, name: "" });
   const [albums, setAlbums] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
   const [newSong, setNewSong] = useState({
     name: "",
     duration: "",
@@ -41,6 +42,7 @@ export const AddSong = () => {
       window.location.href = "/";
     } catch (error) {
       console.log(error);
+      setErrorMessage(error.response.data.map(msg => <p>{msg}</p>));
     }
   };
 
@@ -142,6 +144,10 @@ export const AddSong = () => {
         <button className="btn btn-primary" onClick={handleSubmit}>
           Save
         </button>
+
+        {<div className={errorMessage ? `visible` : `invisible`}>
+          {errorMessage}
+        </div>}
       </div>
     </div>
   );

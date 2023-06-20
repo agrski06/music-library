@@ -13,7 +13,6 @@ const Albums = () => {
       try {
         const response = await axios.get("http://localhost:8080/api/albums");
         setAlbums(response.data);
-        console.log(response.data);
         setIsLoading(false);
       } catch (error) {
         console.log(error);
@@ -46,7 +45,7 @@ const Albums = () => {
             <div className="collapse collapse-arrow rounded-none bg-neutral">
               <input type="radio" name="my-accordion-2" />
               <div className="collapse-title text-xl font-medium">
-                {album.name}
+                {album.name}, {album.releaseYear}
               </div>
               <div className="collapse-content">
                 {album.songs.map((song, index) => {

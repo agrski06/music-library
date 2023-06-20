@@ -4,6 +4,7 @@ import axios from "axios";
 
 export const AddArtist = () => {
   const [newArtist, setNewArtist] = useState({ name: "" });
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = ({ currentTarget: input }) => {
     setNewArtist({ ...newArtist, [input.name]: input.value });
@@ -17,7 +18,7 @@ export const AddArtist = () => {
       );
       window.location.href = "/";
     } catch (error) {
-      console.log(error);
+      setErrorMessage(error.response.data.map(msg => msg));
     }
   };
 
@@ -42,6 +43,10 @@ export const AddArtist = () => {
         <button className="btn btn-primary" onClick={handleSubmit}>
           Save
         </button>
+
+        {<div className={errorMessage ? `visible` : `invisible`}>
+          {errorMessage}
+        </div>}
       </div>
     </div>
   );
