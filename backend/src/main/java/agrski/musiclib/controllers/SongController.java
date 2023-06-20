@@ -4,6 +4,7 @@ import agrski.musiclib.dtos.NewSong;
 import agrski.musiclib.dtos.UpdatedSong;
 import agrski.musiclib.entities.Song;
 import agrski.musiclib.services.SongService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +40,7 @@ public class SongController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Song> saveSong(@RequestBody NewSong song) {
+    public ResponseEntity<Song> saveSong(@Valid @RequestBody NewSong song) {
         return ResponseEntity.ok(songService.addNewSong(song));
     }
 

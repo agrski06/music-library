@@ -4,6 +4,7 @@ import agrski.musiclib.dtos.NewAlbum;
 import agrski.musiclib.dtos.UpdatedAlbum;
 import agrski.musiclib.entities.Album;
 import agrski.musiclib.services.AlbumService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class AlbumController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Album> saveAlbum(@RequestBody NewAlbum album) {
+    public ResponseEntity<Album> saveAlbum(@Valid @RequestBody NewAlbum album) {
         return ResponseEntity.ok(albumService.addNewAlbum(album));
     }
 

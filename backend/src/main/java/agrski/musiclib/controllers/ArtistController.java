@@ -4,6 +4,7 @@ import agrski.musiclib.dtos.NewArtist;
 import agrski.musiclib.dtos.UpdatedArtist;
 import agrski.musiclib.entities.Artist;
 import agrski.musiclib.services.ArtistService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class ArtistController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Artist> saveArtist(@RequestBody NewArtist artist) {
+    public ResponseEntity<Artist> saveArtist(@Valid @RequestBody NewArtist artist) {
         return ResponseEntity.ok(artistService.addNewArtist(artist));
     }
 
